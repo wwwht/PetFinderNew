@@ -1,3 +1,11 @@
+'''
+Author: your name
+Date: 2021-11-06 09:36:32
+LastEditTime: 2021-11-07 20:31:44
+LastEditors: Please set LastEditors
+Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+FilePath: \PetFinderNew\main.py
+'''
 import time
 from comet_ml import Experiment
 import torch.optim as optim
@@ -11,8 +19,11 @@ from poutyne.framework import Model
 from poutyne.framework.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from callbacks import CometCallback
 from logger import logging
+import yaml
+from .data.transformation.default_tranform import default_transforms
 
 if __name__ == '__main__':
+    
     project = Project()
     # our hyperparameters
     params = {
@@ -32,9 +43,8 @@ if __name__ == '__main__':
         pin_memory=True,
         num_workers=4,
     )
-    # is always good practice to visualise some of the train and val images to be sure data-aug
-    # is applied properly
-    show_dl(train_dl)
+    # is always good practice to visual
+    
     show_dl(test_dl)
     # define our comet experiment
     experiment = Experiment(api_key="YOU_KEY",
