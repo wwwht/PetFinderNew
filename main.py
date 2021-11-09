@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-06 09:36:32
-LastEditTime: 2021-11-08 22:41:44
+LastEditTime: 2021-11-09 20:37:21
 LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: \PetFinderNew\main.py
@@ -21,6 +21,7 @@ from callbacks import CometCallback
 from logger import logging
 import yaml
 import argparse
+from box import Box
 from .data.transformation.default_tranform import default_transforms
 from data.MyDataset import *
 from torch.utils.data import DataLoader, random_split
@@ -36,7 +37,8 @@ def getConfig():
     
 if __name__ == '__main__':
     # load config file
-    conf = getConfig()
+    paramSuper = getConfig()
+    conf = Box(paramSuper)
     # project = Project()
     # our hyperparameters
     params = {
@@ -58,13 +60,20 @@ if __name__ == '__main__':
     # )
     # is always good practice to visual
     ######DataLoader must be in main method#######
-    train_dataset, val_dataset = createDataset(conf['root_path'], default_transforms, conf['image_size'])
+    train_dataset, val_dataset = createDataset(conf.root_path, \
+                                            conf.transform, conf.image_size)
+    train_dl = DataLoader(train_dataset, **conf.train_loader)
+    val_dl = DataLoader(val_dataset, **conf.val_loader)
+
     ##############################################
-    show_dl(test_dl)
+    show_dl(val_dl)
     # define our comet experiment
-    experiment = Experiment(api_key="YOU_KEY",
-                            project_name="dl-pytorch-template", workspace="francescosaveriozuppichini")
-    experiment.log_parameters(params)
+    experiment = Experiment(     
+        api_key="KNa0W6RYETaR8Z1qhy8x5Z2aR",     
+        project_name="petfinder",     
+        workspace="wwwht", 
+        )
+    experiment.log_parameters(paramSuper)
     # create our special resnet18
     cnn = resnet18(2).to(device)
     # print the model summary to show useful information
