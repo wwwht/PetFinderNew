@@ -1,7 +1,7 @@
 '''
 Author: your name
 Date: 2021-11-09 20:38:45
-LastEditTime: 2021-11-09 21:09:45
+LastEditTime: 2021-11-10 22:31:31
 LastEditors: Please set LastEditors
 Description: Timm Implement of Swin transformer
 FilePath: \PetFinderNew\models\swinTrans.py
@@ -26,4 +26,11 @@ class SwinModel(nn.Module):
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
-        self.backbone = 
+        self.backbone = create_model(
+            self.cfg.model.name, pretrained=True, num_classes=0, in_chans=3
+        )
+        num_features = self.backbone.num_features
+        self.fc = nn.Sequential(
+            nn.Dropout(0.5), nn.Linear(num_features, self.cfg.model.output_dim)
+        )
+    def forward()
