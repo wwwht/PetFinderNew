@@ -1,8 +1,8 @@
 '''
 Author: your name
 Date: 2021-11-06 09:36:32
-LastEditTime: 2021-11-09 20:37:21
-LastEditors: Please set LastEditors
+LastEditTime: 2021-11-17 15:37:12
+LastEditors: wht
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: \PetFinderNew\main.py
 '''
@@ -14,6 +14,7 @@ from Project import Project
 from data import get_dataloaders
 from data.transformation import train_transform, val_transform
 from models import MyCNN, resnet18
+from models.swinTrans import SwinModel
 from utils import device, show_dl
 from poutyne.framework import Model
 from poutyne.framework.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
@@ -75,7 +76,8 @@ if __name__ == '__main__':
         )
     experiment.log_parameters(paramSuper)
     # create our special resnet18
-    cnn = resnet18(2).to(device)
+    # cnn = resnet18(2).to(device)
+    cnn = SwinModel(conf).to(device)
     # print the model summary to show useful information
     logging.info(summary(cnn, (3, 224, 244)))
     # define custom optimizer and instantiace the trainer `Model`

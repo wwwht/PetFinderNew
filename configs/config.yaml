@@ -14,3 +14,6 @@ val_loader:
   num_workers: 4
   pin_memory: False
   drop_last: False
+model:
+  name: swin_tiny_patch4_window7_224
+  output_dim: 1
