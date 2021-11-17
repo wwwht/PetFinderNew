@@ -1,8 +1,8 @@
 '''
 Author: your name
 Date: 2021-11-06 09:36:32
-LastEditTime: 2021-11-17 15:37:12
-LastEditors: wht
+LastEditTime: 2021-11-17 22:14:05
+LastEditors: Please set LastEditors
 Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 FilePath: \PetFinderNew\main.py
 '''
@@ -82,14 +82,15 @@ if __name__ == '__main__':
     logging.info(summary(cnn, (3, 224, 244)))
     # define custom optimizer and instantiace the trainer `Model`
     optimizer = optim.Adam(cnn.parameters(), lr=params['lr'])
-    model = Model(cnn, optimizer, "cross_entropy",
-                  batch_metrics=["accuracy"]).to(device)
+    model = Model(cnn, optimizer, conf.loss,
+                  batch_metrics=["mse"]).to(device)
     # usually you want to reduce the lr on plateau and store the best model
+    checkpoint_dir = os.path.join(conf.base_dir, "checkpoint")
     callbacks = [
-        ReduceLROnPlateau(monitor="val_acc", patience=5, verbose=True),
-        ModelCheckpoint(str(project.checkpoint_dir /
+        ReduceLROnPlateau(monitor="val_mse", patience=5, verbose=True),
+        ModelCheckpoint(str(checkpoint_dir /
                             f"{time.time()}-model.pt"), save_best_only="True", verbose=True),
-        EarlyStopping(monitor="val_acc", patience=10, mode='max'),
+        EarlyStopping(monitor="val_mse", patience=10, mode='max'),
         CometCallback(experiment)
     ]
     model.fit_generator(
@@ -99,6 +100,6 @@ if __name__ == '__main__':
         callbacks=callbacks,
     )
     # get the results on the test set
-    loss, test_acc = model.evaluate_generator(test_dl)
-    logging.info(f'test_acc=({test_acc})')
-    experiment.log_metric('test_acc', test_acc)
+    loss, test_mse= model.evaluate_generator(val_dl)
+    logging.info(f'test_mse=({test_mse})')
+    experiment.log_metric('test_mse', test_mse)

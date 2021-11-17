@@ -1,5 +1,7 @@
 # config file of out projext
 root_path: A:\\Kaggle\\PetFinder
+base_dir: D:\\Work\\PetFinderNew
+checkpoint_dir: 
 image_size: 224
 transform: default_transforms
 train_loader:
@@ -17,3 +19,4 @@ val_loader:
 model:
   name: swin_tiny_patch4_window7_224
   output_dim: 1
+loss: BCEWithLogitsLoss
